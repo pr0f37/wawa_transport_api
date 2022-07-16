@@ -1,0 +1,5 @@
+/.python-version
+/.vscode
+config.ini
+dev_tools/.env
+*.pyc

@@ -1,0 +1,12 @@
+@api_key = {{$dotenv api_key}}
+### - współrzędne przystanków
+GET https://api.um.warszawa.pl/api/action/dbstore_get?id=ab75c33d-3a26-4342-b36a-6e5fef0a3ac3&page=1&size=5&apikey={{api_key}}
+
+
+### - zespół przystanków
+POST https://api.um.warszawa.pl/api/action/dbtimetable_get/?id=88cd555f-6f31-43ca-9de4-66c479ad5942&apikey={{api_key}}&busstopId=1001&busstopNr=01
+### - rozkład linii dla przystanku
+POST https://api.um.warszawa.pl/api/action/dbtimetable_get/?id=e923fa0e-d96c-43f9-ae6e-60518c9f3238&busstopId=7009&busstopNr=01&line=523&apikey=5facbd6d-7794-452a-bf5f-2d980ccc2e64
+
+### - współrzędne pojazdów
+POST https://api.um.warszawa.pl/api/action/busestrams_get/?resource_id=f2e5503e-927d-4ad3-9500-4ab9e55deb59&apikey={{api_key}}&line=503
