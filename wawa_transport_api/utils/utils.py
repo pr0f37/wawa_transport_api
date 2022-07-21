@@ -1,20 +1,18 @@
 """Module containing methods to be used across the application"""
-from math import pi, sin, cos, atan2, sqrt
+from math import atan2, cos, pi, sin, sqrt
 from typing import Dict, List
 
+from wawa_transport_api.domain.model import BusStop, Coordinates, Line
 
-from wawa_transport_api.domain.model import BusStop, Coordinates
 
-
-def parse_bus_stops(stops: List[Dict]) -> List[BusStop]:
+def parse_stops(stops: List[Dict]) -> List[BusStop]:
     """
-    Return a list containing a list of bus stops parsed
-    from OpenApi response
+    Return a list containing parsed bus stops from OpenApi response
     """
-    return [_parse_bus_stop(stop["values"]) for stop in stops]
+    return [_parse_stop(stop["values"]) for stop in stops]
 
 
-def _parse_bus_stop(stop: Dict) -> BusStop:
+def _parse_stop(stop: Dict) -> BusStop:
     _attrs = {val["key"]: val["value"] for val in stop}
     return BusStop(
         id=_attrs["zespol"],
@@ -69,3 +67,15 @@ def closest_stop(
             closest = stop
             min_dist = dist
     return closest
+
+
+def _parse_line(line: Dict) -> Line:
+    _attrs = {val["key"]: val["value"] for val in line}
+    return Line(number=_attrs["linia"])
+
+
+def parse_lines(lines: List[Dict]) -> List[Line]:
+    """
+    Return a list containing parsed lines from OpenApi response
+    """
+    return [_parse_line(line["values"]) for line in lines]
