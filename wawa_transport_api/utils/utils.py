@@ -1,8 +1,15 @@
 """Module containing methods to be used across the application"""
 from math import atan2, cos, pi, sin, sqrt
 from typing import Dict, List
+from datetime import time, datetime
 
-from wawa_transport_api.domain.model import BusStop, Coordinates, Line
+from wawa_transport_api.domain.model import (
+    BusStop,
+    Coordinates,
+    Line,
+    Timeline,
+    Timetable,
+)
 
 
 def parse_stops(stops: List[Dict]) -> List[BusStop]:
@@ -79,3 +86,37 @@ def parse_lines(lines: List[Dict]) -> List[Line]:
     Return a list containing parsed lines from OpenApi response
     """
     return [_parse_line(line["values"]) for line in lines]
+
+
+def _parse_timeline(timeline: List[Dict]) -> Timeline:
+    _attrs = {val["key"]: val["value"] for val in timeline}
+    return Timeline(
+        arrival_time=datetime.strptime(_attrs["czas"], "%H:%M:%S").time(),
+        direction=_attrs["kierunek"],
+        brigade=_attrs["brygada"],
+    )
+
+
+def parse_timetable(timetable: List[Dict], line: str) -> Timetable:
+    """
+    Return a timetable for particular line containing arrival timelines.
+    """
+    timelines = [_parse_timeline(timeline["values"]) for timeline in timetable]
+    return Timetable(timelines, line)
+
+
+def get_next_arrival_timeline(timetable: Timetable) -> Timeline:
+    """
+    Returns next arrival timeline (arrival time, direction and brigade)
+    from now for a given line stop timetable.
+    """
+    now = datetime.now()
+    max_time_delta = datetime.combine(now, time().max) - now
+    nat = None
+    for timeline in timetable.timelines:
+        arrival_timedate = datetime.combine(now, timeline.arrival_time)
+        time_delta = arrival_timedate - now
+        if time_delta < max_time_delta and arrival_timedate > now:
+            max_time_delta = time_delta
+            nat = timeline
+    return nat
