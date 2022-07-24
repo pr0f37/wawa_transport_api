@@ -1,8 +1,9 @@
-from domain.model import Coordinates
-
-from utils.api_requests import get_stops_coordinates, get_stop_timetable
-from wawa_transport_api.domain.model import BusStop
-from wawa_transport_api.utils.api_requests import get_stop_lines
+from wawa_transport_api.domain.model import BusStop, Coordinates
+from wawa_transport_api.utils.api_requests import (
+    get_stop_lines,
+    get_stop_timetable,
+    get_vehicle_location,
+)
 
 stop = BusStop(
     id="2134",
@@ -21,3 +22,8 @@ def test_get_stop_lines():
 def test_get_stop_timetable():
     timetable = get_stop_timetable(stop.id, stop.number, "9")
     isinstance(timetable, list)
+
+
+def test_get_vehicle_location():
+    location = get_vehicle_location("9", "2")
+    isinstance(location, list)

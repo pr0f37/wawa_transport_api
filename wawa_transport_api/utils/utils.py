@@ -116,7 +116,18 @@ def get_next_arrival_timeline(timetable: Timetable) -> Timeline:
     for timeline in timetable.timelines:
         arrival_timedate = datetime.combine(now, timeline.arrival_time)
         time_delta = arrival_timedate - now
-        if time_delta < max_time_delta and arrival_timedate > now:
+        if time_delta < max_time_delta and arrival_timedate >= now:
             max_time_delta = time_delta
             nat = timeline
     return nat
+
+
+def _parse_vehicle_location(location: Dict) -> Coordinates:
+    return Coordinates(lat=location["Lat"], lon=location["Lon"])
+
+
+def parse_vehicle_locations(locations: List[Dict]) -> List[Coordinates]:
+    """
+    Return locations of Coordinates for given from OpenApi response.
+    """
+    return [_parse_vehicle_location(location) for location in locations]

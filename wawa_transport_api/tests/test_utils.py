@@ -1,16 +1,21 @@
 from datetime import datetime, time
 
-from domain.model import Coordinates
-from utils.api_requests import get_stop_lines, get_stops_coordinates
-from utils.utils import (
+from wawa_transport_api.domain.model import Coordinates, Line, Timeline, Timetable
+from wawa_transport_api.utils.api_requests import (
+    get_stop_lines,
+    get_stop_timetable,
+    get_stops_coordinates,
+    get_vehicle_location,
+)
+from wawa_transport_api.utils.utils import (
     calculate_haversine_distance,
     closest_stop,
+    get_next_arrival_timeline,
     parse_lines,
     parse_stops,
+    parse_timetable,
+    parse_vehicle_locations,
 )
-from wawa_transport_api.domain.model import Line, Timeline, Timetable
-from wawa_transport_api.utils.api_requests import get_stop_timetable
-from wawa_transport_api.utils.utils import get_next_arrival_timeline, parse_timetable
 
 
 def _get_closest_stop(distance_func=None):
@@ -80,3 +85,18 @@ def test_find_next_arrival():
     for arrival in next_arrivals.values():
         if arrival.arrival_time:
             assert arrival.arrival_time > datetime.now().time()
+
+
+def test_get_vehicles_locations():
+    timetables = _parse_timetables()
+    next_arrivals = {
+        timetable.line: get_next_arrival_timeline(timetable=timetable)
+        for timetable in timetables
+    }
+    locations = [
+        parse_vehicle_locations(
+            get_vehicle_location(line=line, brigade=timeline.brigade)
+        )
+        for line, timeline in next_arrivals.items()
+    ]
+    pass

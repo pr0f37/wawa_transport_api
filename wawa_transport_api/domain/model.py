@@ -78,3 +78,11 @@ class Timetable:
 
     timelines: List[Timeline]
     line: Line
+
+
+@dataclass
+class ScheduleItem:
+    line: Line
+    direction: str
+    arrival_time: time
+    position: Coordinates
