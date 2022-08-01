@@ -73,7 +73,7 @@ if __name__ == "__main__":
         "km from you",
     )
     print("Schedule:")
-    for item in schedule:
+    for item in sorted(schedule, key=lambda x: x.arrival_time):
         print(f"Line: {item.line} -> {item.direction}")
         print(f"Arrives at: {item.arrival_time}")
         print(
