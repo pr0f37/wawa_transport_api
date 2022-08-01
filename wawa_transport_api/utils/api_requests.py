@@ -65,3 +65,28 @@ def get_stop_timetable(stop_id: str, stop_number: str, line_number: str) -> List
     )
     timetable = response.json()["result"]
     return timetable
+
+
+def get_vehicle_location(line: str = None, brigade: str = None) -> List[Dict]:
+    """
+    Fetch coordinates for vehicles. Optional line and brigade atributes to
+    narrow the search.
+
+    Returns:
+        List[Dict]: List of coordinates for given line and/or brigade
+    """
+    payload = {
+        "resource_id": "f2e5503e-927d-4ad3-9500-4ab9e55deb59",
+        "apikey": API_KEY,
+        "type": "1" if line and int(line) > 100 else "2",
+    }
+    if line:
+        payload = {**payload, "line": line}
+    if brigade:
+        payload = {**payload, "brigade": brigade}
+
+    response = requests.get(
+        "https://api.um.warszawa.pl/api/action/busestrams_get", params=payload
+    )
+    locations = response.json()["result"]
+    return locations

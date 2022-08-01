@@ -78,3 +78,21 @@ class Timetable:
 
     timelines: List[Timeline]
     line: Line
+
+
+@dataclass
+class ScheduleItem:
+    """
+    Class representing single row from the schedule for single line on a bus/tram stop
+
+    Properties:
+        line: Line
+        direction: str
+        arrival_time: time
+        position: Coordinates
+    """
+
+    line: Line
+    direction: str
+    arrival_time: time
+    position: Coordinates

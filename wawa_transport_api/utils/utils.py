@@ -19,7 +19,7 @@ def parse_stops(stops: List[Dict]) -> List[BusStop]:
     return [_parse_stop(stop["values"]) for stop in stops]
 
 
-def _parse_stop(stop: Dict) -> BusStop:
+def _parse_stop(stop: List[Dict]) -> BusStop:
     _attrs = {val["key"]: val["value"] for val in stop}
     return BusStop(
         id=_attrs["zespol"],
@@ -105,18 +105,33 @@ def parse_timetable(timetable: List[Dict], line: str) -> Timetable:
     return Timetable(timelines, line)
 
 
-def get_next_arrival_timeline(timetable: Timetable) -> Timeline:
+def get_next_arrival_timeline(timetable: Timetable) -> Timeline | None:
     """
     Returns next arrival timeline (arrival time, direction and brigade)
     from now for a given line stop timetable.
     """
-    now = datetime.now()
+    now = _current_time()
     max_time_delta = datetime.combine(now, time().max) - now
     nat = None
     for timeline in timetable.timelines:
         arrival_timedate = datetime.combine(now, timeline.arrival_time)
         time_delta = arrival_timedate - now
-        if time_delta < max_time_delta and arrival_timedate > now:
+        if time_delta < max_time_delta and arrival_timedate >= now:
             max_time_delta = time_delta
             nat = timeline
     return nat
+
+
+def _current_time():
+    return datetime.now()
+
+
+def _parse_vehicle_location(location: Dict) -> Coordinates:
+    return Coordinates(lat=location["Lat"], lon=location["Lon"])
+
+
+def parse_vehicle_locations(locations: List[Dict]) -> List[Coordinates]:
+    """
+    Return locations of Coordinates for given from OpenApi response.
+    """
+    return [_parse_vehicle_location(location) for location in locations]
