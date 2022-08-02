@@ -25,11 +25,11 @@ You may expect the following technologies used in this repo:
 ## Setup
 ### Local environment
 To setup your local environment start by creating a virtualenv with `python 3.10` or higher.
-In your activated virtualenv `poetry 1.1.12` or higher:
+In your activated virtual environment install `poetry 1.1.12` or higher:
 ```shell
 $ pip install poetry
 ```
-And install all packages using the provided `pyproject.toml` and `poetry.lock` files like so:
+And install all packages using the provided `pyproject.toml` and `poetry.lock` files, like so:
 ```shell
 $ poetry install
 ```
